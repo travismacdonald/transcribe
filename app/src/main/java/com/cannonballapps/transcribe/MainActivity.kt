@@ -1,5 +1,9 @@
 package com.cannonballapps.transcribe
 
+import android.content.Context
+import android.media.AudioAttributes
+import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,8 +17,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.cannonballapps.transcribe.ui.theme.TranscribeTheme
 
 class MainActivity : ComponentActivity() {
+
+    private lateinit var m: MediaPlayer
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        audioExample2()
+
         setContent {
             TranscribeTheme {
                 // A surface container using the 'background' color from the theme
@@ -27,7 +37,38 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        m.release()
+    }
+
+    private fun audioExample(context: Context) {
+        val mediaPlayer = MediaPlayer.create(context, R.raw.countdown)
+        mediaPlayer.start()
+    }
+
+    private fun audioExample2(
+
+    ) {
+        val myUri: Uri = Uri.parse("android.resource://com.cannonballapps.transcribe/" + R.raw.countdown)
+        m = MediaPlayer().apply {
+            setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .build()
+            )
+            setDataSource(applicationContext, myUri)
+            setOnPreparedListener { it.start() }
+            prepareAsync()
+//            prepare()
+//            start()
+        }
+    }
 }
+
+
 
 @Composable
 fun Greeting(name: String) {
