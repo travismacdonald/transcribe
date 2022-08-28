@@ -26,7 +26,9 @@ fun WaveformBar(
      * TODO these corner radius calculations are definitely not correct
      */
     Canvas(
-        modifier = Modifier.width(width).height(height),
+        modifier = Modifier
+            .width(width)
+            .height(height),
     ) {
         val bottomCornerRadiusFloat: Float
         val topCornerRadiusFloat: Float
@@ -71,8 +73,16 @@ fun WaveformBar(
             color = Color.Blue,
         )
     }
-
 }
+
+@Composable
+fun WaveformBarGroup() {
+    
+}
+
+/**
+ * Composable previews
+ */
 
 @Preview
 @Composable
@@ -81,5 +91,13 @@ fun WaveformBarPreview() {
         height = 20.dp,
         width = 10.dp,
         isTop = true,
+    )
+}
+
+@Preview
+@Composable
+fun WaveformBarGroupPreviews() {
+    WaveformBarGroup(
+
     )
 }
