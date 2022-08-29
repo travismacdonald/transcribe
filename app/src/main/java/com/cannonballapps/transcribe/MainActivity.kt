@@ -11,8 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.cannonballapps.transcribe.ui.theme.TranscribeTheme
+import linc.com.amplituda.Amplituda
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -26,6 +28,13 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+        pcmExample2()
+    }
+
+    private fun pcmExample2() {
+        val amplituda = Amplituda(applicationContext)
+        amplituda.processAudio(R.raw.countdown) // crash
     }
 }
 
