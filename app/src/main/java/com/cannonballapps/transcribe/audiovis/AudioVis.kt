@@ -17,6 +17,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
+fun Waveform(
+    samples: List<Int>,
+    sampleRate: Int,
+) {
+
+}
+
+@Composable
 fun WaveformBar(
     height: Dp,
     width: Dp,
@@ -75,10 +83,6 @@ fun WaveformBar(
     }
 }
 
-@Composable
-fun WaveformBarGroup() {
-    
-}
 
 /**
  * Composable previews
@@ -96,8 +100,9 @@ fun WaveformBarPreview() {
 
 @Preview
 @Composable
-fun WaveformBarGroupPreviews() {
-    WaveformBarGroup(
-
+fun WaveformPreview() {
+    Waveform(
+        listOf(),
+        1,
     )
 }

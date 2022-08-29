@@ -1,41 +1,26 @@
 package com.cannonballapps.transcribe
 
-import android.content.Context
 import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.media.SoundPool
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.cannonballapps.transcribe.ui.theme.TranscribeTheme
 
 class MainActivity : ComponentActivity() {
 
     private lateinit var m: MediaPlayer
 
+    private  val mp3File: Uri by lazy {
+        Uri.parse("android.resource://com.cannonballapps.transcribe/" + R.raw.countdown)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         audioExample2()
-
-        setContent {
-            TranscribeTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    Greeting("Android")
-                }
-            }
-        }
+        pcmExample()
     }
 
     override fun onDestroy() {
@@ -43,15 +28,7 @@ class MainActivity : ComponentActivity() {
         m.release()
     }
 
-    private fun audioExample(context: Context) {
-        val mediaPlayer = MediaPlayer.create(context, R.raw.countdown)
-        mediaPlayer.start()
-    }
-
-    private fun audioExample2(
-
-    ) {
-        val myUri: Uri = Uri.parse("android.resource://com.cannonballapps.transcribe/" + R.raw.countdown)
+    private fun audioExample2() {
         m = MediaPlayer().apply {
             setAudioAttributes(
                 AudioAttributes.Builder()
@@ -59,26 +36,18 @@ class MainActivity : ComponentActivity() {
                     .setUsage(AudioAttributes.USAGE_MEDIA)
                     .build()
             )
-            setDataSource(applicationContext, myUri)
+            setDataSource(applicationContext, mp3File)
             setOnPreparedListener { it.start() }
             prepareAsync()
-//            prepare()
-//            start()
         }
     }
-}
 
-
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    TranscribeTheme {
-        Greeting("Android")
+    /**
+     * TODO only support mp3 atm, maybe wav files in the future
+     */
+    private fun pcmExample() {
+        val stream = this.contentResolver.openInputStream(mp3File)
+        val byteArray = stream?.readBytes()
+        Log.d("fubar", "bytes : $byteArray")
     }
 }
