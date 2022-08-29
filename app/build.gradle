@@ -59,6 +59,6 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 
-    implementation 'clojure-interop:javax.sound:1.0.5'
     implementation 'javax.media:jmf:2.1.1e'
+    implementation 'com.github.lincollincol:amplituda:2.2.0'
 }
