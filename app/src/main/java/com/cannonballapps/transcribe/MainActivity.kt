@@ -2,11 +2,14 @@ package com.cannonballapps.transcribe
 
 import android.media.AudioAttributes
 import android.media.MediaPlayer
-import android.media.SoundPool
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
+import linc.com.amplituda.Amplituda
+import linc.com.amplituda.AmplitudaResult
+import linc.com.amplituda.exceptions.AmplitudaException
+import linc.com.amplituda.exceptions.io.AmplitudaIOException
+
 
 class MainActivity : ComponentActivity() {
 
@@ -46,8 +49,23 @@ class MainActivity : ComponentActivity() {
      * TODO only support mp3 atm, maybe wav files in the future
      */
     private fun pcmExample() {
-        val stream = this.contentResolver.openInputStream(mp3File)
-        val byteArray = stream?.readBytes()
-        Log.d("fubar", "bytes : $byteArray")
+//        val amplituda = Amplituda(this.applicationContext)
+//        amplituda.processAudio(R.raw.countdown).get()
+
+
+        val amplituda = Amplituda(context)
+
+        amplituda.processAudio("/storage/emulated/0/Music/Linc - Amplituda.mp3")[{ result: AmplitudaResult<String?> ->
+            val amplitudesData = result.amplitudesAsList()
+            val amplitudesForFirstSecond =
+                result.amplitudesForSecond(1)
+            val duration = result.getAudioDuration(AmplitudaResult.DurationUnit.SECONDS)
+            val source = result.audioSource
+            val sourceType = result.inputAudioType
+        }, { exception: AmplitudaException? ->
+            if (exception is AmplitudaIOException) {
+                println("IO Exception!")
+            }
+        }]
     }
 }
