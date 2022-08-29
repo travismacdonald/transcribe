@@ -4,6 +4,7 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import linc.com.amplituda.Amplituda
 import linc.com.amplituda.AmplitudaResult
@@ -23,7 +24,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         audioExample2()
-        pcmExample()
+        pcmExample2()
     }
 
     override fun onDestroy() {
@@ -45,17 +46,20 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+
+    private fun pcmExample2() {
+        val amplituda = Amplituda(applicationContext)
+        Log.d("fubar", "calling processAudio")
+        amplituda.processAudio(R.raw.countdown)
+        Log.d("fubar", "made it here")
+    }
+
     /**
      * TODO only support mp3 atm, maybe wav files in the future
      */
     private fun pcmExample() {
-//        val amplituda = Amplituda(this.applicationContext)
-//        amplituda.processAudio(R.raw.countdown).get()
-
-
-        val amplituda = Amplituda(context)
-
-        amplituda.processAudio("/storage/emulated/0/Music/Linc - Amplituda.mp3")[{ result: AmplitudaResult<String?> ->
+        val amplituda = Amplituda(applicationContext)
+        amplituda.processAudio(R.raw.countdown)[{ result: AmplitudaResult<Int?> ->
             val amplitudesData = result.amplitudesAsList()
             val amplitudesForFirstSecond =
                 result.amplitudesForSecond(1)
@@ -64,7 +68,7 @@ class MainActivity : ComponentActivity() {
             val sourceType = result.inputAudioType
         }, { exception: AmplitudaException? ->
             if (exception is AmplitudaIOException) {
-                println("IO Exception!")
+                Log.d("fubar", "IO Exception!")
             }
         }]
     }
