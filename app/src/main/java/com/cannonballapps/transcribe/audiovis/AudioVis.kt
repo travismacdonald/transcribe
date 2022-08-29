@@ -15,13 +15,16 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.cannonballapps.transcribe.WaveformUtil
 
 @Composable
 fun Waveform(
     samples: List<Int>,
     sampleRate: Int,
 ) {
+    val normalizedSamples = WaveformUtil.normalizeAmplitudes(samples)
 
+    WaveformBar(height = (normalizedSamples[0] * 10).dp, width = 20.dp, isTop = true)
 }
 
 @Composable
@@ -69,10 +72,10 @@ fun WaveformBar(
                             height = size.height
                         ),
                     ),
-                    topLeft = topCornerRadius,
-                    topRight = topCornerRadius,
-                    bottomLeft = bottomCornerRadius,
-                    bottomRight = bottomCornerRadius,
+//                    topLeft = topCornerRadius,
+//                    topRight = topCornerRadius,
+//                    bottomLeft = bottomCornerRadius,
+//                    bottomRight = bottomCornerRadius,
                 )
             )
         }
@@ -102,7 +105,7 @@ fun WaveformBarPreview() {
 @Composable
 fun WaveformPreview() {
     Waveform(
-        listOf(),
+        listOf(1),
         1,
     )
 }
