@@ -1,9 +1,12 @@
 package com.cannonballapps.transcribe.audiovis
 
+import android.util.Log
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
@@ -17,49 +20,65 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.cannonballapps.transcribe.WaveformUtil
 
+/**
+ * Maybe add some sensible defaults
+ */
 @Composable
 fun Waveform(
     samples: List<Int>,
-    sampleRate: Int,
+    height: Dp,
+    waveformBarWidth: Dp,
+    spaceBetweenWaveformBars: Dp = 4.dp,
 ) {
-    val normalizedSamples = WaveformUtil.normalizeAmplitudes(samples)
+//    val normalizedSamples: List<Float> = WaveformUtil.normalizeAmplitudes(samples)
+    val normalizedSamples: List<Float> = WaveformUtil.normalizeAmplitudes2(
+        samples,
+        normalMin = 0.1f,
+        normalMax = 1.0f,
+    )
+    Log.d("fubar", "$normalizedSamples")
+    Log.d("fubar", "${normalizedSamples.maxOrNull()}")
+    Log.d("fubar", "${normalizedSamples.minOrNull()}")
 
-    WaveformBar(height = (normalizedSamples[0] * 10).dp, width = 20.dp, isTop = true)
+    /** Assume at least two samples **/
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        if (samples.isNotEmpty()) {
+            WaveformBar(
+                height = height.times(normalizedSamples[0]),
+                width = waveformBarWidth,
+            )
+            if (samples.size > 1) {
+                for (sample in normalizedSamples.subList(fromIndex = 1, toIndex = samples.size)) {
+                    Spacer(modifier = Modifier.size(spaceBetweenWaveformBars))
+                    WaveformBar(
+                        height = height.times(sample),
+                        width = waveformBarWidth,
+                    )
+                }
+            }
+        }
+    }
 }
 
 @Composable
 fun WaveformBar(
     height: Dp,
     width: Dp,
-    isTop: Boolean,
 ) {
     /**
-     * TODO these corner radius calculations are definitely not correct
+     * TODO these corner radius calculations might not be correct
      */
+
     Canvas(
-        modifier = Modifier
-            .width(width)
-            .height(height),
+        modifier = Modifier.size(
+            width = width,
+            height = height,
+        ),
     ) {
-        val bottomCornerRadiusFloat: Float
-        val topCornerRadiusFloat: Float
         val roundedCornerRadius = size.width / 2
-
-        if (isTop) {
-            bottomCornerRadiusFloat = 0f
-            topCornerRadiusFloat = roundedCornerRadius
-        } else {
-            bottomCornerRadiusFloat = roundedCornerRadius
-            topCornerRadiusFloat = 0f
-        }
-
-        val topCornerRadius = CornerRadius(
-            x = topCornerRadiusFloat,
-            y = topCornerRadiusFloat,
-        )
-        val bottomCornerRadius = CornerRadius(
-            x = bottomCornerRadiusFloat,
-            y = bottomCornerRadiusFloat,
+        val cornerRadius = CornerRadius(
+            x = roundedCornerRadius,
+            y = roundedCornerRadius,
         )
 
         val path = Path().apply {
@@ -72,10 +91,7 @@ fun WaveformBar(
                             height = size.height
                         ),
                     ),
-//                    topLeft = topCornerRadius,
-//                    topRight = topCornerRadius,
-//                    bottomLeft = bottomCornerRadius,
-//                    bottomRight = bottomCornerRadius,
+                    cornerRadius = cornerRadius
                 )
             )
         }
@@ -97,7 +113,6 @@ fun WaveformBarPreview() {
     WaveformBar(
         height = 20.dp,
         width = 10.dp,
-        isTop = true,
     )
 }
 
@@ -105,7 +120,8 @@ fun WaveformBarPreview() {
 @Composable
 fun WaveformPreview() {
     Waveform(
-        listOf(1),
-        1,
+        samples = listOf(1, 2, 0, 3, 4, 1),
+        height = 200.dp,
+        waveformBarWidth = 20.dp,
     )
 }

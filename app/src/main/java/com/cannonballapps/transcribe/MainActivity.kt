@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.cannonballapps.transcribe.audiovis.Waveform
 import com.cannonballapps.transcribe.audiovis.WaveformBar
@@ -41,17 +43,18 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             TranscribeTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    Surface(
-                        modifier = Modifier.wrapContentSize()
-                    ) {
+//                WaveformBar(
+//                    height = 90.dp,
+//                    width = 20.dp,
+//                    isTop = true,
+//                )
 
-                        WaveformBar(height = 10.dp, width = 20.dp, isTop = true)
-                    }
-                }
+
+                Waveform(
+                    samples = amplitudeData!!,
+                    height = 200.dp,
+                    waveformBarWidth = 16.dp,
+                )
             }
         }
     }
