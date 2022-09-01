@@ -1,10 +1,13 @@
 package com.cannonballapps.transcribe.audiovis
 
-import android.util.Log
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,27 +23,41 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.cannonballapps.transcribe.WaveformUtil
 
+@Composable
+fun WaveformSeekBar(
+    samples: List<Int>,
+    height: Dp,
+    waveformBarWidth: Dp = 20.dp,
+    spaceBetweenWaveformBars: Dp = 4.dp,
+) {
+    Box(modifier = Modifier.horizontalScroll(rememberScrollState())) {
+        Waveform(
+            samples = samples,
+            height = height,
+            waveformBarWidth = waveformBarWidth,
+            spaceBetweenWaveformBars = spaceBetweenWaveformBars,
+        )
+    }
+}
+
 /**
+ * TODO magic number defaults
  * Maybe add some sensible defaults
  */
 @Composable
 fun Waveform(
     samples: List<Int>,
     height: Dp,
-    waveformBarWidth: Dp,
+    waveformBarWidth: Dp = 20.dp,
     spaceBetweenWaveformBars: Dp = 4.dp,
+    // TODO on seek events
 ) {
-//    val normalizedSamples: List<Float> = WaveformUtil.normalizeAmplitudes(samples)
     val normalizedSamples: List<Float> = WaveformUtil.normalizeAmplitudes2(
         samples,
         normalMin = 0.1f,
         normalMax = 1.0f,
     )
-    Log.d("fubar", "$normalizedSamples")
-    Log.d("fubar", "${normalizedSamples.maxOrNull()}")
-    Log.d("fubar", "${normalizedSamples.minOrNull()}")
 
-    /** Assume at least two samples **/
     Row(verticalAlignment = Alignment.CenterVertically) {
         if (samples.isNotEmpty()) {
             WaveformBar(
@@ -68,7 +85,6 @@ fun WaveformBar(
     /**
      * TODO these corner radius calculations might not be correct
      */
-
     Canvas(
         modifier = Modifier.size(
             width = width,

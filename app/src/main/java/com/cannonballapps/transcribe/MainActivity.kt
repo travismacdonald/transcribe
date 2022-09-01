@@ -7,16 +7,14 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.cannonballapps.transcribe.audiovis.Waveform
-import com.cannonballapps.transcribe.audiovis.WaveformBar
+import com.cannonballapps.transcribe.audiovis.WaveformSeekBar
 import com.cannonballapps.transcribe.ui.theme.TranscribeTheme
 import linc.com.amplituda.Amplituda
 import linc.com.amplituda.AmplitudaResult
@@ -43,18 +41,17 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             TranscribeTheme {
-//                WaveformBar(
-//                    height = 90.dp,
-//                    width = 20.dp,
-//                    isTop = true,
-//                )
+                Box(
+                    Modifier.wrapContentSize().padding(horizontal = 8.dp)
+                ) {
+                    WaveformSeekBar(
+                        samples = amplitudeData!!,
+                        height = 200.dp,
+                        waveformBarWidth = 6.dp,
+                        spaceBetweenWaveformBars = 2.dp,
+                    )
 
-
-                Waveform(
-                    samples = amplitudeData!!,
-                    height = 200.dp,
-                    waveformBarWidth = 16.dp,
-                )
+                }
             }
         }
     }
