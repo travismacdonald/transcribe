@@ -1,5 +1,6 @@
 package com.cannonballapps.transcribe.audiovis
 
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.horizontalScroll
@@ -52,6 +53,7 @@ fun Waveform(
     spaceBetweenWaveformBars: Dp = 4.dp,
     // TODO on seek events
 ) {
+    Log.d("fubar", "Waveform composable called")
     val normalizedSamples: List<Float> = WaveformUtil.normalizeAmplitudes2(
         samples,
         normalMin = 0.1f,
