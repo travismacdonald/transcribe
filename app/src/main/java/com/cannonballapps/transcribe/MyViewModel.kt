@@ -23,11 +23,15 @@ class MyViewModel @Inject constructor(
     private val _waveformsFlow = MutableStateFlow<WrappedValue>(WrappedValue.Loading)
     val waveformsFlow = _waveformsFlow.asStateFlow()
 
-    fun fetchWaveforms() {
+    fun fetchWaveforms(isSilentRefresh: Boolean = false) {
         viewModelScope.launch(Dispatchers.IO) {
+            if (!isSilentRefresh) {
+                _waveformsFlow.value = WrappedValue.Loading
+            }
+
             val res = waveformTransformHelper.extractWaveforms(
                 rawResId = R.raw.countdown,
-                framesPerSecond = 10,
+                framesPerSecond = 10, // TODO hardcoded number
             )
             // TODO: error case
             _waveformsFlow.value = WrappedValue.Success(res)
