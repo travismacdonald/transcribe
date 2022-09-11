@@ -30,8 +30,6 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var m: MediaPlayer
 
-    private var amplitudeData: List<Int>? = null
-
     private  val mp3File: Uri by lazy {
         Uri.parse("android.resource://com.cannonballapps.transcribe/" + R.raw.countdown)
     }
@@ -39,9 +37,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel.fubar()
+        viewModel.fetchWaveforms()
         audioExample2()
-        pcmExample()
 
         setContent {
             TranscribeTheme {
@@ -49,7 +46,7 @@ class MainActivity : ComponentActivity() {
                     Modifier.wrapContentSize().padding(horizontal = 8.dp)
                 ) {
                     WaveformSeekBar(
-                        samples = amplitudeData!!,
+                        samplesFlow = viewModel.waveformsFlow,
                         height = 200.dp,
                         waveformBarWidth = 6.dp,
                         spaceBetweenWaveformBars = 2.dp,
@@ -77,19 +74,5 @@ class MainActivity : ComponentActivity() {
             setOnPreparedListener { it.start() }
             prepareAsync()
         }
-    }
-
-    /**
-     * TODO Test what file types are supported
-     */
-    private fun pcmExample() {
-        val amplituda = Amplituda(applicationContext)
-        amplituda.processAudio(R.raw.countdown, Compress.withParams(Compress.AVERAGE, 10))[{ result: AmplitudaResult<Int?> ->
-            amplitudeData = result.amplitudesAsList()
-        }, { exception: AmplitudaException? ->
-            if (exception is AmplitudaIOException) {
-                Log.d("fubar", "IO Exception!")
-            }
-        }]
     }
 }
