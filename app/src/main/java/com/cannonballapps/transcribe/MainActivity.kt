@@ -16,11 +16,6 @@ import androidx.compose.ui.unit.dp
 import com.cannonballapps.transcribe.audiovis.WaveformSeekBar
 import com.cannonballapps.transcribe.ui.theme.TranscribeTheme
 import dagger.hilt.android.AndroidEntryPoint
-import linc.com.amplituda.Amplituda
-import linc.com.amplituda.AmplitudaResult
-import linc.com.amplituda.Compress
-import linc.com.amplituda.exceptions.AmplitudaException
-import linc.com.amplituda.exceptions.io.AmplitudaIOException
 
 
 @AndroidEntryPoint
