@@ -18,6 +18,7 @@ data class SamplesData(
 @HiltViewModel
 class MyViewModel @Inject constructor(
     private val waveformTransformHelper: WaveformTransformHelper,
+    private val transcribeMediaPlayer: TranscribeMediaPlayer,
 ): ViewModel() {
 
     private val _waveformsFlow: MutableStateFlow<WrappedValue<SamplesData>> = MutableStateFlow(WrappedValue.Loading)

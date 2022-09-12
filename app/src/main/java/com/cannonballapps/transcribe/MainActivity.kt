@@ -25,7 +25,7 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var m: MediaPlayer
 
-    private  val mp3File: Uri by lazy {
+    private val mp3File: Uri by lazy {
         Uri.parse("android.resource://com.cannonballapps.transcribe/" + R.raw.countdown)
     }
 

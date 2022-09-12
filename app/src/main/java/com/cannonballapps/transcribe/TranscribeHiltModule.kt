@@ -1,6 +1,7 @@
 package com.cannonballapps.transcribe
 
 import android.content.Context
+import android.media.MediaPlayer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,4 +17,7 @@ object TranscribeHiltModule {
     fun provideAmplituda(
         @ApplicationContext context: Context,
     ): Amplituda = Amplituda(context)
+
+    @Provides
+    fun provideMediaPlayer(): MediaPlayer = MediaPlayer()
 }
