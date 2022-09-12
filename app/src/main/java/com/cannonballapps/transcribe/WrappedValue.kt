@@ -1,8 +1,7 @@
 package com.cannonballapps.transcribe
 
-// TODO: make generic
-sealed class WrappedValue {
-    class Success(val waveforms: List<Int>) : WrappedValue()
-    class Error(val e: Throwable) : WrappedValue()
-    object Loading : WrappedValue()
+sealed class WrappedValue<out T> {
+    class Success<T>(val value: T) : WrappedValue<T>()
+    class Error(val e: Throwable) : WrappedValue<Nothing>()
+    object Loading : WrappedValue<Nothing>()
 }
