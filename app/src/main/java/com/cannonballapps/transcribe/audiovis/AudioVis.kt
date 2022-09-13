@@ -5,7 +5,9 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -22,40 +24,38 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.cannonballapps.transcribe.SamplesData
-import com.cannonballapps.transcribe.WrappedValue
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.cannonballapps.transcribe.MyViewModel
 import com.cannonballapps.transcribe.WaveformUtil
-import kotlinx.coroutines.flow.StateFlow
+import com.cannonballapps.transcribe.WrappedValue
 
-/**
- * TODO
- * change some of these parameters to use Modifier (e.g. `height: Dp`)
- */
 @Composable
-fun WaveformSeekBar(
-    samplesFlow: StateFlow<WrappedValue<SamplesData>>,
-    height: Dp,
-    waveformBarWidth: Dp = 20.dp,
-    spaceBetweenWaveformBars: Dp = 4.dp,
+fun WaveformSeekBarPresenter(
+    viewModel: MyViewModel = viewModel(),
 ) {
-    val s = samplesFlow.collectAsState()
+    val samples = viewModel.waveformsFlow.collectAsState()
 
-    (s.value as? WrappedValue.Success)?.let {
-        Box(modifier = Modifier.horizontalScroll(rememberScrollState())) {
-            Waveform(
-                samples = it.value.samples,
-                height = height,
-                waveformBarWidth = waveformBarWidth,
-                spaceBetweenWaveformBars = spaceBetweenWaveformBars,
+    Box(
+        Modifier.wrapContentSize().padding(horizontal = 8.dp)
+    ) {
+        (samples.value as? WrappedValue.Success)?.let {
+            WaveformSeekBar(
+                samplesData = it.value,
+                seekBarPosition = 4, // TODO
+                height = 200.dp,
+                waveformBarWidth = 6.dp,
+                spaceBetweenWaveformBars = 2.dp,
             )
         }
-    }
-    (s.value as? WrappedValue.Loading)?.let {
-        Box(modifier = Modifier.horizontalScroll(rememberScrollState())) {
-            Text(text = "Loading")
+
+        (samples.value as? WrappedValue.Loading)?.let {
+            Box(modifier = Modifier.horizontalScroll(rememberScrollState())) {
+                Text(text = "Loading")
+            }
         }
     }
 }
+
 
 /**
  * TODO magic number defaults

@@ -5,13 +5,8 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
-import com.cannonballapps.transcribe.audiovis.WaveformSeekBar
+import com.cannonballapps.transcribe.audiovis.WaveformSeekBarPresenter
 import com.cannonballapps.transcribe.ui.theme.TranscribeTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -35,17 +30,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             TranscribeTheme {
-                Box(
-                    Modifier.wrapContentSize().padding(horizontal = 8.dp)
-                ) {
-                    WaveformSeekBar(
-                        samplesFlow = viewModel.waveformsFlow,
-                        height = 200.dp,
-                        waveformBarWidth = 6.dp,
-                        spaceBetweenWaveformBars = 2.dp,
-                    )
-
-                }
+                WaveformSeekBarPresenter()
             }
         }
     }
