@@ -18,6 +18,7 @@ object TranscribeHiltModule {
         @ApplicationContext context: Context,
     ): Amplituda = Amplituda(context)
 
+    // TODO see if this should be released on destroy
     @Provides
     fun provideMediaPlayer(): MediaPlayer = MediaPlayer()
 }

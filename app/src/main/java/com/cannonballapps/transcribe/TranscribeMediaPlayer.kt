@@ -25,6 +25,11 @@ class TranscribeMediaPlayer @Inject constructor(
 
     fun setMedia(uri: Uri) {
         mediaPlayer.setDataSource(context, uri)
+        mediaPlayer.prepareAsync()
+    }
+
+    fun playMedia() {
+        mediaPlayer.start()
     }
 
 }

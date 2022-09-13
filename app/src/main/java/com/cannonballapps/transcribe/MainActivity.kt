@@ -23,17 +23,11 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel: MyViewModel by viewModels()
 
-    private lateinit var m: MediaPlayer
-
-    private val mp3File: Uri by lazy {
-        Uri.parse("android.resource://com.cannonballapps.transcribe/" + R.raw.countdown)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         viewModel.fetchWaveforms()
-        audioExample2()
+        viewModel.playMedia()
 
         setContent {
             TranscribeTheme {
@@ -49,25 +43,6 @@ class MainActivity : ComponentActivity() {
 
                 }
             }
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        m.release()
-    }
-
-    private fun audioExample2() {
-        m = MediaPlayer().apply {
-            setAudioAttributes(
-                AudioAttributes.Builder()
-                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                    .setUsage(AudioAttributes.USAGE_MEDIA)
-                    .build()
-            )
-            setDataSource(applicationContext, mp3File)
-            setOnPreparedListener { it.start() }
-            prepareAsync()
         }
     }
 }
