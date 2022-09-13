@@ -5,8 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,19 +28,25 @@ class MyViewModel @Inject constructor(
         const val SAMPLES_PER_SECOND = 10
     }
 
+    // TODO clean this up
     private val mp3File: Uri by lazy {
         Uri.parse("android.resource://com.cannonballapps.transcribe/" + R.raw.countdown)
     }
 
-    private val _waveformsFlow: MutableStateFlow<WrappedValue<SamplesData>> = MutableStateFlow(WrappedValue.Loading)
+    private var mediaPlayerPoller: Job? = null
+
+    private val _waveformsFlow = MutableStateFlow<WrappedValue<SamplesData>>(WrappedValue.Loading)
     val waveformsFlow = _waveformsFlow.asStateFlow()
+
+    private val _mediaPositionMillisFlow = MutableStateFlow(0)
+    val mediaPositionMillisFlow = _mediaPositionMillisFlow.asStateFlow()
 
     init {
         transcribeMediaPlayer.setMedia(mp3File)
     }
 
     fun fetchWaveforms(isSilentRefresh: Boolean = false) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Default) {
             if (!isSilentRefresh) {
                 _waveformsFlow.value = WrappedValue.Loading
             }
@@ -59,5 +67,19 @@ class MyViewModel @Inject constructor(
 
     fun playMedia() {
         transcribeMediaPlayer.playMedia()
+        startMediaPlayerPoller()
+    }
+
+    private fun startMediaPlayerPoller() {
+        mediaPlayerPoller?.cancel()
+        mediaPlayerPoller = viewModelScope.launch(Dispatchers.Default) {
+            while (isActive) {
+                _mediaPositionMillisFlow.value = transcribeMediaPlayer.mediaPosition
+            }
+        }
+    }
+
+    private fun stopMediaPlayerPoller() {
+        mediaPlayerPoller?.cancel()
     }
 }

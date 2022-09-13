@@ -23,6 +23,9 @@ class TranscribeMediaPlayer @Inject constructor(
         }
     }
 
+    val mediaPosition: Int
+            get() = mediaPlayer.currentPosition
+
     fun setMedia(uri: Uri) {
         mediaPlayer.setDataSource(context, uri)
         mediaPlayer.prepareAsync()
@@ -31,5 +34,4 @@ class TranscribeMediaPlayer @Inject constructor(
     fun playMedia() {
         mediaPlayer.start()
     }
-
 }
