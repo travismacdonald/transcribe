@@ -1,5 +1,6 @@
 package com.cannonballapps.transcribe.audiovis
 
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cannonballapps.transcribe.MyViewModel
+import com.cannonballapps.transcribe.SamplesData
 import com.cannonballapps.transcribe.WaveformUtil
 import com.cannonballapps.transcribe.WrappedValue
 
@@ -34,14 +36,20 @@ fun WaveformSeekBarPresenter(
     viewModel: MyViewModel = viewModel(),
 ) {
     val samples = viewModel.waveformsFlow.collectAsState()
+    val seekBarPosition = viewModel.mediaPositionMillisFlow.collectAsState().value
+//    val seekBarPosition = 3000
+
+    Log.d("fubar", "waveform seekbar presenter")
 
     Box(
-        Modifier.wrapContentSize().padding(horizontal = 8.dp)
+        Modifier
+            .wrapContentSize()
+            .padding(horizontal = 8.dp)
     ) {
         (samples.value as? WrappedValue.Success)?.let {
             WaveformSeekBar(
                 samplesData = it.value,
-                seekBarPosition = 4, // TODO
+                seekBarPosition = (seekBarPosition / 50),
                 height = 200.dp,
                 waveformBarWidth = 6.dp,
                 spaceBetweenWaveformBars = 2.dp,
@@ -63,26 +71,28 @@ fun WaveformSeekBarPresenter(
  */
 @Composable
 fun Waveform(
-    samples: List<Int>,
+    samples: SamplesData,
     height: Dp,
     waveformBarWidth: Dp = 20.dp,
     spaceBetweenWaveformBars: Dp = 4.dp,
-    // TODO on seek events
 ) {
+
+    Log.d("fubar", "waveform: ${samples.hashCode()}")
+
     val normalizedSamples: List<Float> = WaveformUtil.normalizeAmplitudes2(
-        samples,
+        samples.samples,
         normalMin = 0.1f,
         normalMax = 1.0f,
     )
 
     Row(verticalAlignment = Alignment.CenterVertically) {
-        if (samples.isNotEmpty()) {
+        if (samples.samples.isNotEmpty()) {
             WaveformBar(
                 height = height.times(normalizedSamples[0]),
                 width = waveformBarWidth,
             )
-            if (samples.size > 1) {
-                for (sample in normalizedSamples.subList(fromIndex = 1, toIndex = samples.size)) {
+            if (samples.samples.size > 1) {
+                for (sample in normalizedSamples.subList(fromIndex = 1, toIndex = samples.samples.size)) {
                     Spacer(modifier = Modifier.size(spaceBetweenWaveformBars))
                     WaveformBar(
                         height = height.times(sample),
@@ -102,6 +112,9 @@ fun WaveformBar(
     /**
      * TODO these corner radius calculations might not be correct
      */
+
+    Log.d("fubar", "waveformbar")
+
     Canvas(
         modifier = Modifier.size(
             width = width,
@@ -152,9 +165,9 @@ fun WaveformBarPreview() {
 @Preview
 @Composable
 fun WaveformPreview() {
-    Waveform(
-        samples = listOf(1, 2, 0, 3, 4, 1),
-        height = 200.dp,
-        waveformBarWidth = 20.dp,
-    )
+//    Waveform(
+//        samples = listOf(1, 2, 0, 3, 4, 1),
+//        height = 200.dp,
+//        waveformBarWidth = 20.dp,
+//    )
 }

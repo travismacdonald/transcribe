@@ -1,12 +1,13 @@
 package com.cannonballapps.transcribe.audiovis
 
+import android.util.Log
+import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -24,15 +25,26 @@ fun WaveformSeekBar(
     waveformBarWidth: Dp = 20.dp,
     spaceBetweenWaveformBars: Dp = 4.dp,
 ) {
-    Box(modifier = Modifier.horizontalScroll(rememberScrollState())) {
+
+    Log.d("fubar", "waveform seekbar")
+
+    Box(
+        modifier = Modifier
+            .horizontalScroll(rememberScrollState())
+            .border(width = 2.dp, color = Color.Black)
+        ,
+    ) {
         Waveform(
-            samples = samplesData.samples,
+            samples = samplesData,
             height = height,
             waveformBarWidth = waveformBarWidth,
             spaceBetweenWaveformBars = spaceBetweenWaveformBars,
         )
         SeekBar(
-            modifier = Modifier.height(height).width(4.dp) // TODO figure out how to position this
+            modifier = Modifier
+                .height(height)
+                .width(2.dp)
+                .offset(x = seekBarPosition.dp)
         )
     }
 }

@@ -1,5 +1,6 @@
 package com.cannonballapps.transcribe.audiovis
 
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
@@ -15,6 +16,8 @@ import androidx.compose.ui.unit.dp
 fun SeekBar(
     modifier: Modifier = Modifier,
 ) {
+    Log.d("fubar", "seekbar")
+
     Box(modifier = Modifier.wrapContentSize()) {
         Canvas(
             modifier = modifier,
